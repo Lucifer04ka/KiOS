@@ -1,6 +1,5 @@
 #include "ahci.h"
-#include "../../mm/heap.h"
-#include "../../kernel/kernel.h"
+#include "../../mm/pmm.h"
 #include <string.h>
 
 // ============================================================================
