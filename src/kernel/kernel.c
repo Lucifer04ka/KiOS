@@ -12,6 +12,7 @@
 #include "driver/ahci/ahci.h"
 #include "fs/vfs/vfs.h"
 #include "fs/kifs/kifs.h"
+#include "gfx/2d/gfx.h"
 
 __attribute__((used, section(".requests")))
 static volatile struct limine_framebuffer_request framebuffer_request = { .id = LIMINE_FRAMEBUFFER_REQUEST, .revision = 0 };
@@ -100,7 +101,7 @@ void execute_command(const char* cmd) {
     shell_y += 20;
     
     if (strcmp(cmd, "help") == 0) {
-        draw_string(fb, "Commands: help, about, clear, mem, color, disk, vfs, format", 10, shell_y, current_text_color);
+        draw_string(fb, "Commands: help, about, clear, mem, color, disk, vfs, format, demo", 10, shell_y, current_text_color);
     } else if (strcmp(cmd, "about") == 0) {
         draw_string(fb, "KiOS v0.1.0 - 64-bit microkernel.", 10, shell_y, current_text_color);
         shell_y += 15;
@@ -124,6 +125,15 @@ void execute_command(const char* cmd) {
         draw_string(fb, "VFS: Ready. Use 'format' to format disk.", 10, shell_y, current_text_color);
     } else if (strcmp(cmd, "format") == 0) {
         draw_string(fb, "Format: Not implemented yet.", 10, shell_y, current_text_color);
+    } else if (strcmp(cmd, "demo") == 0) {
+        gfx_init(fb->address, fb->width, fb->height);
+        gfx_clear(RGB(10, 10, 20));
+        gfx_draw_rect(50, 50, 200, 150, RGB(0, 200, 100));
+        gfx_fill_rect(300, 100, 100, 80, RGB(100, 100, 255));
+        gfx_draw_circle(600, 200, 50, RGB(255, 200, 0));
+        gfx_fill_circle(600, 350, 40, RGB(255, 50, 150));
+        gfx_draw_text("KiOS Graphics OK!", 100, 450, RGB(255, 255, 255));
+        draw_string(fb, "Demo displayed. Press ENTER.", 10, shell_y, color_green);
     }
     else if (strcmp(cmd, "color green") == 0) {
         current_text_color = color_green;
