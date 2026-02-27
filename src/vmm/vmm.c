@@ -5,6 +5,39 @@
 #include <string.h>
 
 // ============================================================================
+// Simple string functions (for freestanding)
+// ============================================================================
+
+static int hex_to_str(uint64_t val, char* str) {
+    const char* hex = "0123456789abcdef";
+    int i = 0;
+    for (int j = 15; j >= 0; j--) {
+        str[i++] = hex[(val >> (j * 4)) & 0xF];
+    }
+    str[i] = '\0';
+    return i;
+}
+
+static int int_to_str(int val, char* str) {
+    char tmp[32];
+    int i = 0;
+    if (val == 0) {
+        str[0] = '0';
+        str[1] = '\0';
+        return 1;
+    }
+    while (val > 0) {
+        tmp[i++] = '0' + (val % 10);
+        val /= 10;
+    }
+    for (int j = 0; j < i; j++) {
+        str[j] = tmp[i - 1 - j];
+    }
+    str[i] = '\0';
+    return i;
+}
+
+// ============================================================================
 // Global Variables
 // ============================================================================
 
@@ -247,17 +280,9 @@ void vmm_page_fault_handler(uint64_t error_code, uint64_t rip) {
     bool write = (error_code & 0x02) != 0;
     bool user = (error_code & 0x04) != 0;
     
-    char msg[128];
-    char* p = msg;
-    
-    p += sprintf(p, "PAGE FAULT at 0x%016lX\n", fault_addr);
-    p += sprintf(p, present ? "Protection Fault\n" : "Missing Page\n");
-    p += sprintf(p, write ? "Write\n" : "Read\n");
-    p += sprintf(p, user ? "User Mode\n" : "Kernel Mode\n");
-    
     // For now, just halt on page fault
     if (fb) {
-        draw_string(fb, msg, 10, 400, 0x00FF0000);
+        draw_string(fb, "PAGE FAULT!", 10, 400, 0x00FF0000);
     }
     
     // Hang

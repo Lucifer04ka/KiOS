@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📘 KiOS Documentation</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🖥️</text></svg>">
+</head>
+<body>
+    <nav class="sidebar">
+        <div class="logo">
+            <span class="logo-icon">🖥️</span>
+            <span class="logo-text">KiOS</span>
+            <span class="logo-version">Project</span>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-title">📚 Документация</div>
+            <a href="index.html" class="nav-item active">
+                <span class="nav-icon">🏠</span> Главная
+            </a>
+            <a href="manifest.html" class="nav-item">
+                <span class="nav-icon">📋</span> Манифест
+            </a>
+            <a href="roadmap.html" class="nav-item">
+                <span class="nav-icon">🗺️</span> Дорожная карта
+            </a>
+            <a href="structure.html" class="nav-item">
+                <span class="nav-icon">📁</span> Структура проекта
+            </a>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-title">⚙️ Техническая</div>
+            <a href="file-formats.html" class="nav-item">
+                <span class="nav-icon">📄</span> Форматы файлов
+            </a>
+            <a href="kilang.html" class="nav-item">
+                <span class="nav-icon">🔤</span> KiLang
+            </a>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-title">🔗 Ссылки</div>
+            <a href="https://github.com" class="nav-item" target="_blank">
+                <span class="nav-icon">🐙</span> GitHub
+            </a>
+            <a href="https://discord.com/invite/clawd" class="nav-item" target="_blank">
+                <span class="nav-icon">💬</span> Discord
+            </a>
+        </div>
+        
+        <div class="nav-footer">
+            <div class="status">
+                <span class="status-dot"></span>
+                <span>В разработке</span>
+            </div>
+        </div>
+    </nav>
+    
+    <main class="content">
+        <header class="page-header">
+            <div class="breadcrumb">
+                <a href="index.html">Главная</a>
+                <span class="separator">›</span>
+                <span class="current">Документация KiOS</span>
+            </div>
+        </header>
+        
+        <div class="hero">
+            <div class="hero-badge">🛠️ В разработке</div>
+            <h1>Документация <span class="highlight">KiOS</span></h1>
+            <p class="hero-subtitle">Полная экосистема независимой операционной системы</p>
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-number">9</span>
+                    <span class="stat-label">Фаз</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">∞</span>
+                    <span class="stat-label">Возможностей</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">1</span>
+                    <span class="stat-label">Цель</span>
+                </div>
+            </div>
+        </div>
+        
+        <section class="features">
+            <h2>🚀 Что такое KiOS?</h2>
+            <p>KiOS — это вертикально-интегрированная экосистема, разработанная с нуля:</p>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">💾</div>
+                    <h3>Ядро</h3>
+                    <p>64-битное микроядро на C/ASM с поддержкой виртуальной памяти</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🔤</div>
+                    <h3>KiLang</h3>
+                    <p>Собственный язык программирования с системой владения</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📦</div>
+                    <h3>Форматы</h3>
+                    <p>Проприетарные бинарные форматы: .kelf, .kfs, .ktx, .kimg</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">💿</div>
+                    <h3>KiFS</h3>
+                    <p>Собственная файловая система с журналированием</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🖼️</div>
+                    <h3>Графика</h3>
+                    <p>Нативный графический сервер и Desktop Environment</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🔄</div>
+                    <h3>Self-Hosting</h3>
+                    <p>KiOS компилирует сама себя</p>
+                </div>
+            </div>
+        </section>
+        
+        <section class="quick-start">
+            <h2>⚡ Быстрый старт</h2>
+            <div class="code-block">
+                <div class="code-header">
+                    <span class="code-lang">Bash</span>
+                    <button class="copy-btn" onclick="copyCode(this)">📋 Копировать</button>
+                </div>
+                <pre><code># Клонирование репозитория
+git clone &lt;repo&gt; KiOS
+cd KiOS
+
+# Сборка ядра
+make
+
+# Запуск в QEMU
+make run
+
+# Создание ISO
+make iso</code></pre>
+            </div>
+        </section>
+        
+        <section class="docs-preview">
+            <h2>📖 Разделы документации</h2>
+            
+            <div class="docs-grid">
+                <a href="manifest.html" class="doc-card">
+                    <div class="doc-icon">📋</div>
+                    <div class="doc-content">
+                        <h3>Технический манифест</h3>
+                        <p>Обзор архитектуры, целей и стека технологий</p>
+                    </div>
+                    <div class="doc-arrow">→</div>
+                </a>
+                
+                <a href="roadmap.html" class="doc-card">
+                    <div class="doc-icon">🗺️</div>
+                    <div class="doc-content">
+                        <h3>Дорожная карта</h3>
+                        <p>9 фаз развития от ядра до самокомпиляции</p>
+                    </div>
+                    <div class="doc-arrow">→</div>
+                </a>
+                
+                <a href="structure.html" class="doc-card">
+                    <div class="doc-icon">📁</div>
+                    <div class="doc-content">
+                        <h3>Структура проекта</h3>
+                        <p>Организация файлов и директорий</p>
+                    </div>
+                    <div class="doc-arrow">→</div>
+                </a>
+                
+                <a href="file-formats.html" class="doc-card">
+                    <div class="doc-icon">📄</div>
+                    <div class="doc-content">
+                        <h3>Форматы файлов</h3>
+                        <p>Спецификации .kelf, .kfs, .ktx, .kimg</p>
+                    </div>
+                    <div class="doc-arrow">→</div>
+                </a>
+                
+                <a href="kilang.html" class="doc-card">
+                    <div class="doc-icon">🔤</div>
+                    <div class="doc-content">
+                        <h3>Спецификация KiLang</h3>
+                        <p>Синтаксис, типы, стандартная библиотека</p>
+                    </div>
+                    <div class="doc-arrow">→</div>
+                </a>
+            </div>
+        </section>
+        
+        <section class="current-phase">
+            <h2>📍 Текущая фаза</h2>
+            <div class="phase-card">
+                <div class="phase-badge">🟢</div>
+                <div class="phase-info">
+                    <h3>Фаза 1: Базовая система</h3>
+                    <p>Завершено: GDT, IDT, PIC, Long Mode, PMM, Heap, Keyboard, Framebuffer, Terminal</p>
+                </div>
+                <div class="phase-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 100%"></div>
+                    </div>
+                    <span>100%</span>
+                </div>
+            </div>
+            
+            <div class="phase-card next">
+                <div class="phase-badge">🟡</div>
+                <div class="phase-info">
+                    <h3>Фаза 2: Виртуализация и Защита</h3>
+                    <p>Следующая: VMM, Syscalls, Memory Protection</p>
+                </div>
+                <div class="phase-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%"></div>
+                    </div>
+                    <span>0%</span>
+                </div>
+            </div>
+        </section>
+        
+        <footer class="page-footer">
+            <p>📅 Обновлено: 2026-02-27 | KiOS Project — Полный контроль от транзистора до синтаксиса</p>
+        </footer>
+    </main>
+    
+    <script src="js/main.js"></script>
+</body>
+</html>

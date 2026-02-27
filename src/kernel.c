@@ -6,6 +6,8 @@
 #include "idt.h"
 #include "pmm.h"
 #include "heap.h"
+#include "vmm/vmm.h"
+#include "syscall/syscall.h"
 
 __attribute__((used, section(".requests")))
 static volatile struct limine_framebuffer_request framebuffer_request = { .id = LIMINE_FRAMEBUFFER_REQUEST, .revision = 0 };
@@ -150,8 +152,10 @@ void _start(void) {
     idt_init();
     pmm_init(&memmap_request, hhdm_request.response->offset);
     heap_init(hhdm_request.response->offset);
+    vmm_init();
+    syscall_init();
 
-    draw_string(fb, "KiOS Terminal initialized.", 10, 20, color_white);
+    draw_string(fb, "KiOS v0.2.0 - VMM & Syscalls enabled.", 10, 20, color_white);
     draw_string(fb, PROMPT, 10, shell_y, color_yellow);
 
     for (;;) asm("hlt");

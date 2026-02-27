@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📁 Структура проекта — KiOS Documentation</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🖥️</text></svg>">
+</head>
+<body>
+    <nav class="sidebar">
+        <div class="logo">
+            <span class="logo-icon">🖥️</span>
+            <span class="logo-text">KiOS</span>
+            <span class="logo-version">Project</span>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-title">📚 Документация</div>
+            <a href="index.html" class="nav-item">
+                <span class="nav-icon">🏠</span> Главная
+            </a>
+            <a href="manifest.html" class="nav-item">
+                <span class="nav-icon">📋</span> Манифест
+            </a>
+            <a href="roadmap.html" class="nav-item">
+                <span class="nav-icon">🗺️</span> Дорожная карта
+            </a>
+            <a href="structure.html" class="nav-item active">
+                <span class="nav-icon">📁</span> Структура проекта
+            </a>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-title">⚙️ Техническая</div>
+            <a href="file-formats.html" class="nav-item">
+                <span class="nav-icon">📄</span> Форматы файлов
+            </a>
+            <a href="kilang.html" class="nav-item">
+                <span class="nav-icon">🔤</span> KiLang
+            </a>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-title">🔗 Ссылки</div>
+            <a href="#" class="nav-item" target="_blank">
+                <span class="nav-icon">🐙</span> GitHub
+            </a>
+            <a href="https://discord.com/invite/clawd" class="nav-item" target="_blank">
+                <span class="nav-icon">💬</span> Discord
+            </a>
+        </div>
+        
+        <div class="nav-footer">
+            <div class="status">
+                <span class="status-dot"></span>
+                <span>В разработке</span>
+            </div>
+        </div>
+    </nav>
+    
+    <main class="content">
+        <header class="page-header">
+            <div class="breadcrumb">
+                <a href="index.html">Главная</a>
+                <span class="separator">›</span>
+                <span class="current">Структура проекта</span>
+            </div>
+        </header>
+        
+        <div class="content-inner">
+            <section>
+                <h1>📁 Структура Проекта KiOS</h1>
+                <p class="hero-subtitle">Версия 2.0 | Чистая, организованная структура</p>
+            </section>
+            
+            <section>
+                <h2>🗂️ Общая Структура</h2>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">Tree</span>
+                    </div>
+                    <pre><code>KiOS/
+├── <span class="keyword">src/</span>                    <span class="comment"># Исходный код ядра</span>
+│   ├── <span class="keyword">kernel/</span>             <span class="comment"># Главное ядро</span>
+│   │   ├── kernel.c
+│   │   ├── kernel.h
+│   │   └── main.c
+│   │
+│   ├── <span class="keyword">arch/</span>               <span class="comment"># Архитектурно-зависимый код</span>
+│   │   ├── x86_64/           <span class="comment"># x86_64 специфичные</span>
+│   │   │   ├── gdt/          <span class="comment"># Global Descriptor Table</span>
+│   │   │   ├── idt/          <span class="comment"># Interrupt Descriptor Table</span>
+│   │   │   ├── paging/       <span class="comment"># VMM и paging</span>
+│   │   │   ├── syscall/      <span class="comment"># System calls</span>
+│   │   │   └── asm/          <span class="comment"># Ассемблерные вставки</span>
+│   │   │
+│   │   └── common/           <span class="comment"># Общие для всех архитектур</span>
+│   │
+│   ├── <span class="keyword">mm/</span>                   <span class="comment"># Memory Management</span>
+│   │   ├── pmm.c             <span class="comment"># Physical Memory Manager</span>
+│   │   ├── pmm.h
+│   │   ├── vmm.c             <span class="comment"># Virtual Memory Manager</span>
+│   │   ├── vmm.h
+│   │   ├── heap.c            <span class="comment"># Dynamic heap</span>
+│   │   └── heap.h
+│   │
+│   ├── <span class="keyword">driver/</span>             <span class="comment"># Драйверы устройств</span>
+│   │   ├── pci/              <span class="comment"># PCI bus</span>
+│   │   ├── ahci/             <span class="comment"># SATA/AHCI storage</span>
+│   │   ├── ps2/              <span class="comment"># PS/2 keyboard/mouse</span>
+│   │   ├── vesa/             <span class="comment"># VESA/VBE graphics</span>
+│   │   ├── rtc/              <span class="comment"># Real Time Clock</span>
+│   │   └── driver.h
+│   │
+│   ├── <span class="keyword">fs/</span>                 <span class="comment"># Файловые системы</span>
+│   │   ├── vfs.c             <span class="comment"># Virtual File System</span>
+│   │   ├── vfs.h
+│   │   ├── kfs/              <span class="comment"># KiOS File System</span>
+│   │   │   ├── kfs.c
+│   │   │   ├── kfs.h
+│   │   │   ├── inode.c
+│   │   │   └── journal.c
+│   │   └── fat/              <span class="comment"># FAT32 (опционально)</span>
+│   │
+│   ├── <span class="keyword">gui/</span>                <span class="comment"># Графический интерфейс</span>
+│   │   ├── display/          <span class="comment"># Display server</span>
+│   │   ├── window/           <span class="comment"># Window manager</span>
+│   │   ├── compositor/       <span class="comment"># Compositor</span>
+│   │   ├── widgets/          <span class="comment"># UI виджеты</span>
+│   │   └── events/           <span class="comment"># Обработка событий</span>
+│   │
+│   ├── <span class="keyword">gfx/</span>                <span class="comment"># Графика (низкий уровень)</span>
+│   │   ├── framebuf.c
+│   │   ├── 2d.c
+│   │   ├── font.c
+│   │   └── image.c
+│   │
+│   ├── <span class="keyword">net/</span>                <span class="comment"># Сеть (Фаза 9)</span>
+│   │   ├── ethernet/
+│   │   ├── tcpip/
+│   │   └── socket.c
+│   │
+│   ├── <span class="keyword">ipc/</span>                <span class="comment"># Межпроцессное взаимодействие</span>
+│   │
+│   ├── <span class="keyword">process/</span>           <span class="comment"># Управление процессами</span>
+│   │   ├── process.c
+│   │   ├── thread.c
+│   │   ├── scheduler.c
+│   │   └── elf.c
+│   │
+│   ├── <span class="keyword">syscall/</span>           <span class="comment"># System call handlers</span>
+│   │
+│   ├── <span class="keyword">lib/</span>                <span class="comment"># Внутренняя библиотека</span>
+│   │
+│   ├── <span class="keyword">include/</span>            <span class="comment"># Заголовочные файлы</span>
+│   │   ├── kios.h
+│   │   ├── error.h
+│   │   └── types.h
+│   │
+│   └── <span class="keyword">boot/</span>               <span class="comment"># Загрузка (если отдельно)</span>
+│
+├── <span class="keyword">kernel/</span>               <span class="comment"># Скомпилированное ядро</span>
+│   └── kiOS.bin
+│
+├── <span class="keyword">iso/</span>                  <span class="comment"># Образы для загрузки</span>
+│   ├── kiOS.iso
+│   └── kiOS.img
+│
+├── <span class="keyword">userspace/</span>           <span class="comment"># Пользовательские программы</span>
+│   ├── kish/
+│   ├── kcalc/
+│   ├── kedit/
+│   ├── kimg/
+│   ├── kfile/
+│   ├── kdesktop/
+│   └── templates/
+│
+├── <span class="keyword">tools/</span>               <span class="comment"># Инструменты сборки</span>
+│   ├── cross-compile.sh
+│   ├── iso.sh
+│   ├── run.sh
+│   └── debug/
+│
+├── <span class="keyword">docs/</span>                 <span class="comment"># Документация</span>
+│   ├── architecture/
+│   ├── api/
+│   ├── standards/
+│   └── notes/
+│
+├── <span class="keyword">tests/</span>                <span class="comment"># Тесты</span>
+│   ├── unit/
+│   ├── integration/
+│   └── stress/
+│
+├── <span class="keyword">assets/</span>               <span class="comment"># Ресурсы</span>
+│   ├── fonts/
+│   ├── icons/
+│   ├── wallpapers/
+│   └── sounds/
+│
+├── <span class="keyword">compiler/</span>            <span class="comment"># Компилятор KiLang</span>
+│   ├── kilang/              <span class="comment"># Язык</span>
+│   │   ├── scanner/
+│   │   ├── parser/
+│   │   ├── ast/
+│   │   ├── sema/
+│   │   └── codegen/
+│   │
+│   └── libkios/             <span class="comment"># Стандартная библиотека</span>
+│
+├── Makefile
+├── README.md
+├── CHANGELOG.md
+├── LICENSE
+└── .gitignore</code></pre>
+                </div>
+            </section>
+            
+            <section>
+                <h2>📄 Описание Директорий</h2>
+                
+                <h3>src/ — Исходный код</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr><th>Папка</th><th>Содержание</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><code>arch/x86_64/</code></td><td>CPU-специфичный код (GDT, IDT, paging)</td></tr>
+                            <tr><td><code>mm/</code></td><td>Управление памятью (PMM, VMM, heap)</td></tr>
+                            <tr><td><code>driver/</code></td><td>Драйверы устройств</td></tr>
+                            <tr><td><code>fs/</code></td><td>Файловые системы</td></tr>
+                            <tr><td><code>gui/</code></td><td>Графический интерфейс</td></tr>
+                            <tr><td><code>gfx/</code></td><td>Низкоуровневая графика</td></tr>
+                            <tr><td><code>process/</code></td><td>Процессы и планировщик</td></tr>
+                            <tr><td><code>syscall/</code></td><td>Обработчики системных вызовов</td></tr>
+                            <tr><td><code>lib/</code></td><td>Внутренняя библиотека ядра</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            
+            <section>
+                <h2>🔧 Скрипты Сборки</h2>
+                
+                <h3>Основные команды</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">Bash</span>
+                    </div>
+                    <pre><code><span class="command">make</span>            <span class="comment"># Собрать ядро</span>
+<span class="command">make iso</span>        <span class="comment"># Создать загрузочный ISO</span>
+<span class="command">make run</span>       <span class="comment"># Запустить в QEMU</span>
+<span class="command">make debug</span>     <span class="comment"># Отладка в QEMU+GDB</span>
+<span class="command">make clean</span>     <span class="comment"># Очистить</span>
+<span class="command">make userspace</span> <span class="comment"># Собрать все приложения</span>
+<span class="command">make docs</span>      <span class="comment"># Собрать документацию</span></code></pre>
+                </div>
+            </section>
+            
+            <section>
+                <h2>📋 Правила Именования</h2>
+                
+                <h3>Файлы</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr><th>Тип</th><th>Пример</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Исходный код</td><td><code>kernel.c</code>, <code>vmm.c</code></td></tr>
+                            <tr><td>Заголовочный</td><td><code>kernel.h</code>, <code>vmm.h</code></td></tr>
+                            <tr><td>Тесты</td><td><code>vmm_test.c</code></td></tr>
+                            <tr><td>Ассемблер</td><td><code>boot.asm</code></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <h3>Функции</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr><th>Тип</th><th>Пример</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Внутренние</td><td><code>static void pmm_init(void)</code></td></tr>
+                            <tr><td>Экспортируемые</td><td><code>void* kios_malloc(size_t)</code></td></tr>
+                            <tr><td>Макросы</td><td><code>#define KMALLOC kios_malloc</code></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <h3>Переменные</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr><th>Тип</th><th>Пример</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Глобальные</td><td><code>static uint8_t* bitmap;</code></td></tr>
+                            <tr><td>Локальные</td><td><code>uint64_t page_count;</code></td></tr>
+                            <tr><td>Константы</td><td><code>static const uint64_t PAGE_SIZE = 4096;</code></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            
+            <section>
+                <h2>✅ Чеклист Новой Компоненты</h2>
+                <p>При добавлении новой подсистемы:</p>
+                <ul class="checklist">
+                    <li><input type="checkbox"> Создать папку в <code>src/</code></li>
+                    <li><input type="checkbox"> Добавить заголовочный файл <code>.h</code></li>
+                    <li><input type="checkbox"> Добавить реализацию <code>.c</code></li>
+                    <li><input type="checkbox"> Обновить <code>Makefile</code></li>
+                    <li><input type="checkbox"> Добавить в <code>docs/</code> если нужно</li>
+                    <li><input type="checkbox"> Добавить тесты в <code>tests/</code></li>
+                </ul>
+            </section>
+            
+            <section>
+                <h2>🚀 Быстрый Старт</h2>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">Bash</span>
+                    </div>
+                    <pre><code><span class="comment"># Клонирование и сборка</span>
+<span class="command">git clone</span> &lt;repo&gt; KiOS
+<span class="command">cd</span> KiOS
+
+<span class="comment"># Сборка</span>
+<span class="command">make</span>
+
+<span class="comment"># Запуск</span>
+<span class="command">make run</span>
+
+<span class="comment"># Отладка</span>
+<span class="command">make debug</span></code></pre>
+                </div>
+            </section>
+            
+            <footer class="page-footer">
+                <p>📅 Обновлено: 2026-02-27 | KiOS Project</p>
+            </footer>
+        </div>
+    </main>
+    
+    <script src="js/main.js"></script>
+</body>
+</html>
