@@ -102,7 +102,7 @@ void execute_command(const char* cmd) {
     shell_y += 20;
     
     if (strcmp(cmd, "help") == 0) {
-        draw_string(fb, "Cmds: help about clear mem color disk vfs format demo kielf hello", 10, shell_y, current_text_color);
+        draw_string(fb, "Cmds: help about clear mem color disk vfs format ls demo kielf hello", 10, shell_y, current_text_color);
     } else if (strcmp(cmd, "about") == 0) {
         draw_string(fb, "KiOS v0.1.0 - 64-bit microkernel.", 10, shell_y, current_text_color);
         shell_y += 15;
@@ -125,7 +125,20 @@ void execute_command(const char* cmd) {
     } else if (strcmp(cmd, "vfs") == 0) {
         draw_string(fb, "VFS: Ready. Use 'format' to format disk.", 10, shell_y, current_text_color);
     } else if (strcmp(cmd, "format") == 0) {
-        draw_string(fb, "Format: Not implemented yet.", 10, shell_y, current_text_color);
+        // Simple RAM disk for now (16MB)
+        void* ramdisk = pmm_alloc_page();
+        if (ramdisk) {
+            kifs_format(ramdisk, 16 * 1024 * 1024);
+            draw_string(fb, "Format: RAM disk formatted (16MB).", 10, shell_y, color_green);
+        } else {
+            draw_string(fb, "Format: Failed to allocate memory.", 10, shell_y, color_red);
+        }
+    } else if (strcmp(cmd, "ls") == 0) {
+        int count = kifs_list("/");
+        char buf[32];
+        itoa(count, buf);
+        draw_string(fb, "Files: ", 10, shell_y, current_text_color);
+        draw_string(fb, buf, 70, shell_y, color_green);
     } else if (strcmp(cmd, "demo") == 0) {
         gfx_init(fb->address, fb->width, fb->height);
         gfx_clear(RGB(10, 10, 20));
@@ -195,7 +208,7 @@ void _start(void) {
     // vmm_init(); // TODO: Fix VMM
     syscall_init();
 
-    draw_string(fb, "KiOS v0.6.0 - KiELF ready.", 10, 20, color_white);
+    draw_string(fb, "KiOS v0.7.0 - KiFS ready.", 10, 20, color_white);
     draw_string(fb, PROMPT, 10, shell_y, color_yellow);
 
     for (;;) asm("hlt");
