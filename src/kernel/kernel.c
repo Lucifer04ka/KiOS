@@ -10,6 +10,8 @@
 #include "syscall/syscall.h"
 #include "driver/pci/pci.h"
 #include "driver/ahci/ahci.h"
+#include "fs/vfs/vfs.h"
+#include "fs/kifs/kifs.h"
 
 __attribute__((used, section(".requests")))
 static volatile struct limine_framebuffer_request framebuffer_request = { .id = LIMINE_FRAMEBUFFER_REQUEST, .revision = 0 };
@@ -56,6 +58,19 @@ void itoa(uint64_t n, char *str) {
     for (int j = 0; j < i / 2; j++) { char t = str[j]; str[j] = str[i-j-1]; str[i-j-1] = t; }
 }
 
+char* strncpy(char* dest, const char* src, uint64_t n) {
+    uint64_t i = 0;
+    while (i < n && src[i] != '\0') {
+        dest[i] = src[i];
+        i++;
+    }
+    while (i < n) {
+        dest[i] = '\0';
+        i++;
+    }
+    return dest;
+}
+
 // === Настройки Shell ===
 static char input_buffer[64];
 static int input_ptr = 0;
@@ -85,7 +100,7 @@ void execute_command(const char* cmd) {
     shell_y += 20;
     
     if (strcmp(cmd, "help") == 0) {
-        draw_string(fb, "Commands: help, about, clear, mem, color <val>, disk", 10, shell_y, current_text_color);
+        draw_string(fb, "Commands: help, about, clear, mem, color, disk, vfs, format", 10, shell_y, current_text_color);
     } else if (strcmp(cmd, "about") == 0) {
         draw_string(fb, "KiOS v0.1.0 - 64-bit microkernel.", 10, shell_y, current_text_color);
         shell_y += 15;
@@ -105,6 +120,10 @@ void execute_command(const char* cmd) {
         draw_string(fb, "AHCI Ports: ", 10, shell_y, current_text_color);
         itoa(ports, buf);
         draw_string(fb, buf, 100, shell_y, color_green);
+    } else if (strcmp(cmd, "vfs") == 0) {
+        draw_string(fb, "VFS: Ready. Use 'format' to format disk.", 10, shell_y, current_text_color);
+    } else if (strcmp(cmd, "format") == 0) {
+        draw_string(fb, "Format: Not implemented yet.", 10, shell_y, current_text_color);
     } 
     // Простая обработка команды color
     else if (strcmp(cmd, "color green") == 0) {
@@ -163,7 +182,7 @@ void _start(void) {
     // vmm_init(); // TODO: Fix VMM
     syscall_init();
 
-    draw_string(fb, "KiOS v0.3.0 - AHCI Driver ready.", 10, 20, color_white);
+    draw_string(fb, "KiOS v0.4.0 - VFS & KiFS ready.", 10, 20, color_white);
     draw_string(fb, PROMPT, 10, shell_y, color_yellow);
 
     for (;;) asm("hlt");
