@@ -85,7 +85,7 @@ void execute_command(const char* cmd) {
     shell_y += 20;
     
     if (strcmp(cmd, "help") == 0) {
-        draw_string(fb, "Commands: help, about, clear, mem, color <val>", 10, shell_y, current_text_color);
+        draw_string(fb, "Commands: help, about, clear, mem, color <val>, disk", 10, shell_y, current_text_color);
     } else if (strcmp(cmd, "about") == 0) {
         draw_string(fb, "KiOS v0.1.0 - 64-bit microkernel.", 10, shell_y, current_text_color);
         shell_y += 15;
