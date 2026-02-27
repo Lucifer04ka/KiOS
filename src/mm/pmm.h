@@ -1,7 +1,7 @@
 #pragma once
 #include <stdint.h>
 #include <stddef.h>
-#include "limine.h"
+#include "include/limine.h"
 
 #define PAGE_SIZE 4096
 

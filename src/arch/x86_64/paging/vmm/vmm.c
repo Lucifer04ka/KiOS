@@ -1,7 +1,7 @@
 #include "vmm.h"
-#include "../pmm.h"
-#include "../heap.h"
-#include "../idt.h"
+#include "../../../../mm/pmm.h"
+#include "../../../../mm/heap.h"
+#include "../../idt/idt.h"
 #include <string.h>
 
 // ============================================================================

@@ -1,7 +1,7 @@
 .PHONY: all build iso run clean
 
 # Find ALL .c files recursively in src/
-C_SOURCES = $(wildcard src/**/*.c) $(wildcard src/*.c)
+C_SOURCES = $(shell find src -name '*.c')
 # Convert to .o files
 OBJ = $(patsubst src/%.c, build/%.o, $(C_SOURCES))
 
@@ -14,7 +14,7 @@ build: $(OBJ)
 # Universal rule: how to make .o from any .c
 build/%.o: src/%.c
 	@mkdir -p $(dir $@)
-	gcc -m64 -c $< -o $@ -std=gnu99 -ffreestanding -O2 -Wall -Wextra -mno-red-zone -mcmodel=kernel -fno-pic -fno-pie -mgeneral-regs-only
+	gcc -m64 -c $< -o $@ -std=gnu99 -ffreestanding -O2 -Wall -Wextra -mno-red-zone -mcmodel=kernel -fno-pic -fno-pie -mgeneral-regs-only -I src
 
 iso:
 	@if [ ! -d "limine" ]; then git clone https://github.com/limine-bootloader/limine.git --branch=v8.x-binary --depth=1; fi

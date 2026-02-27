@@ -1,12 +1,12 @@
 #include <stdint.h>
 #include <stddef.h>
-#include "limine.h"
-#include "font8x8.h"
-#include "gdt.h"
-#include "idt.h"
-#include "pmm.h"
-#include "heap.h"
-#include "vmm/vmm.h"
+#include "include/limine.h"
+#include "gfx/font8x8.h"
+#include "arch/x86_64/gdt/gdt.h"
+#include "arch/x86_64/idt/idt.h"
+#include "mm/pmm.h"
+#include "mm/heap.h"
+#include "arch/x86_64/paging/vmm/vmm.h"
 #include "syscall/syscall.h"
 
 __attribute__((used, section(".requests")))
