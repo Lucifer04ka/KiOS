@@ -13,6 +13,7 @@
 #include "fs/vfs/vfs.h"
 #include "fs/kifs/kifs.h"
 #include "gfx/2d/gfx.h"
+#include "elf/kielf.h"
 
 __attribute__((used, section(".requests")))
 static volatile struct limine_framebuffer_request framebuffer_request = { .id = LIMINE_FRAMEBUFFER_REQUEST, .revision = 0 };
@@ -101,7 +102,7 @@ void execute_command(const char* cmd) {
     shell_y += 20;
     
     if (strcmp(cmd, "help") == 0) {
-        draw_string(fb, "Commands: help, about, clear, mem, color, disk, vfs, format, demo", 10, shell_y, current_text_color);
+        draw_string(fb, "Cmds: help about clear mem color disk vfs format demo kielf hello", 10, shell_y, current_text_color);
     } else if (strcmp(cmd, "about") == 0) {
         draw_string(fb, "KiOS v0.1.0 - 64-bit microkernel.", 10, shell_y, current_text_color);
         shell_y += 15;
@@ -134,8 +135,11 @@ void execute_command(const char* cmd) {
         gfx_fill_circle(600, 350, 40, RGB(255, 50, 150));
         gfx_draw_text("KiOS Graphics OK!", 100, 450, RGB(255, 255, 255));
         draw_string(fb, "Demo displayed. Press ENTER.", 10, shell_y, color_green);
-    }
-    else if (strcmp(cmd, "color green") == 0) {
+    } else if (strcmp(cmd, "kielf") == 0) {
+        draw_string(fb, "KiELF: Format ready. Use 'hello' to test.", 10, shell_y, current_text_color);
+    } else if (strcmp(cmd, "hello") == 0) {
+        draw_string(fb, "Hello from KiOS! - Compiled with KiELF.", 10, shell_y, color_green);
+    } else if (strcmp(cmd, "color green") == 0) {
         current_text_color = color_green;
         draw_string(fb, "Text color changed to green.", 10, shell_y, color_green);
     } else if (strcmp(cmd, "color red") == 0) {
@@ -191,7 +195,7 @@ void _start(void) {
     // vmm_init(); // TODO: Fix VMM
     syscall_init();
 
-    draw_string(fb, "KiOS v0.5.0 - Drivers & FS ready.", 10, 20, color_white);
+    draw_string(fb, "KiOS v0.6.0 - KiELF ready.", 10, 20, color_white);
     draw_string(fb, PROMPT, 10, shell_y, color_yellow);
 
     for (;;) asm("hlt");
