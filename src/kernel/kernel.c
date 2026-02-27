@@ -8,6 +8,8 @@
 #include "mm/heap.h"
 #include "arch/x86_64/paging/vmm/vmm.h"
 #include "syscall/syscall.h"
+#include "driver/pci/pci.h"
+#include "driver/ahci/ahci.h"
 
 __attribute__((used, section(".requests")))
 static volatile struct limine_framebuffer_request framebuffer_request = { .id = LIMINE_FRAMEBUFFER_REQUEST, .revision = 0 };
@@ -97,6 +99,12 @@ void execute_command(const char* cmd) {
     } else if (strcmp(cmd, "clear") == 0) {
         clear_screen(fb);
         return;
+    } else if (strcmp(cmd, "disk") == 0) {
+        int ports = ahci_get_port_count();
+        char buf[32];
+        draw_string(fb, "AHCI Ports: ", 10, shell_y, current_text_color);
+        itoa(ports, buf);
+        draw_string(fb, buf, 100, shell_y, color_green);
     } 
     // Простая обработка команды color
     else if (strcmp(cmd, "color green") == 0) {
@@ -155,7 +163,7 @@ void _start(void) {
     // vmm_init(); // TODO: Fix VMM
     syscall_init();
 
-    draw_string(fb, "KiOS v0.2.0 - VMM & Syscalls enabled.", 10, 20, color_white);
+    draw_string(fb, "KiOS v0.3.0 - AHCI Driver ready.", 10, 20, color_white);
     draw_string(fb, PROMPT, 10, shell_y, color_yellow);
 
     for (;;) asm("hlt");
