@@ -152,7 +152,7 @@ void _start(void) {
     idt_init();
     pmm_init(&memmap_request, hhdm_request.response->offset);
     heap_init(hhdm_request.response->offset);
-    vmm_init();
+    // vmm_init(); // TODO: Fix VMM
     syscall_init();
 
     draw_string(fb, "KiOS v0.2.0 - VMM & Syscalls enabled.", 10, 20, color_white);
