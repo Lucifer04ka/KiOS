@@ -1,0 +1,19 @@
+# Build output
+build/
+*.o
+*.iso
+*.bin
+
+# Limine (should be submodule)
+limine/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
