@@ -296,24 +296,21 @@ void vmm_page_fault_handler(uint64_t error_code, uint64_t rip) {
 void vmm_init(void) {
     if (vmm_initialized) return;
     
-    // Allocate kernel page tables
-    kernel_pml4 = vmm_alloc_pt();
-    if (!kernel_pml4) {
-        // Panic - no memory
-        for(;;) asm("hlt");
-    }
+    // Get the current page tables from Limine (already set up)
+    // We don't create new ones - we use what bootloader gave us
+    // and just add additional kernel mappings
     
-    memset(kernel_pml4, 0, PAGE_SIZE);
+    uint64_t current_cr3 = read_cr3();
+    kernel_pml4 = (pml4_t*)current_cr3;
     
-    // Map kernel to high memory (0xFFFF800000000000)
-    // For now, we'll use identity mapping for simplicity
-    // In the future, map kernel to high addresses
+    // For now, we just enable paging using bootloader's tables
+    // The identity mapping is already set up by Limine
     
-    // Get memory info from Limine
-    // For now, we rely on the bootloader having set up initial mapping
-    
-    // Enable paging
-    vmm_enable_paging((uint64_t)kernel_pml4);
+    // Enable paging - CR0.PG bit
+    uint64_t cr0;
+    asm volatile("mov %%cr0, %0" : "=r"(cr0));
+    cr0 |= 0x80000000; // PG bit
+    asm volatile("mov %0, %%cr0" :: "r"(cr0));
     
     vmm_initialized = true;
 }

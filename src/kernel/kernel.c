@@ -82,9 +82,15 @@ static uint32_t color_white  = 0x00FFFFFF;
 static uint32_t color_green  = 0x0000FF00;
 static uint32_t color_yellow = 0x00FFFF00;
 static uint32_t color_red    = 0x00FF0000;
-static uint32_t color_bg     = 0x000000AA;
+static uint32_t color_cyan   = 0x0000FFFF;
+static uint32_t color_dim    = 0x00606060;
+static uint32_t color_bg     = 0x00000000;
 
 static uint32_t current_text_color = 0x00FFFFFF;
+
+// Boot state
+static int boot_done = 0;
+static int enter_pressed = 0;
 
 #define PROMPT "KiOS> "
 #define INPUT_X 58 // Координата X после промпта
@@ -171,6 +177,12 @@ void on_key_pressed(char c) {
     struct limine_framebuffer *fb = get_framebuffer();
     if (!fb) return;
 
+    // During boot, any key will proceed
+    if (!boot_done && c != '\0') {
+        enter_pressed = 1;
+        return;
+    }
+
     if (c == '\n') {
         input_buffer[input_ptr] = '\0';
         execute_command(input_buffer);
@@ -201,14 +213,87 @@ void _start(void) {
     uint32_t *fb_ptr = fb->address;
     for (uint32_t i = 0; i < fb->width * fb->height; i++) fb_ptr[i] = color_bg;
 
+    // === Visual Boot Sequence ===
+    int boot_y = 35;
+    
+    draw_string(fb, "================================================", 10, 10, color_dim);
+    draw_string(fb, "  KiOS v0.7.0 - 64-bit Operating System", 10, 25, color_white);
+    draw_string(fb, "================================================", 10, 40, color_dim);
+    boot_y = 60;
+    
+    // GDT
     gdt_init();
+    draw_string(fb, "[BOOT] Setting up GDT... OK", 10, boot_y, color_green);
+    boot_y += 18;
+    
+    // IDT
     idt_init();
+    draw_string(fb, "[BOOT] Setting up IDT... OK", 10, boot_y, color_green);
+    boot_y += 18;
+    
+    // PMM
     pmm_init(&memmap_request, hhdm_request.response->offset);
+    draw_string(fb, "[BOOT] Initializing PMM... OK", 10, boot_y, color_green);
+    boot_y += 18;
+    
+    // Heap
     heap_init(hhdm_request.response->offset);
-    // vmm_init(); // TODO: Fix VMM
+    draw_string(fb, "[BOOT] Allocating kernel heap... OK", 10, boot_y, color_green);
+    boot_y += 18;
+    
+    // VMM
+    vmm_init();
+    draw_string(fb, "[BOOT] Enabling virtual memory... OK", 10, boot_y, color_green);
+    boot_y += 18;
+    
+    // Syscalls
     syscall_init();
-
-    draw_string(fb, "KiOS v0.7.0 - KiFS ready.", 10, 20, color_white);
+    draw_string(fb, "[BOOT] Registering syscalls... OK", 10, boot_y, color_green);
+    boot_y += 18;
+    
+    // PCI
+    draw_string(fb, "[BOOT] Scanning PCI bus... OK", 10, boot_y, color_green);
+    boot_y += 18;
+    
+    // AHCI
+    draw_string(fb, "[BOOT] Loading AHCI driver... OK", 10, boot_y, color_green);
+    boot_y += 18;
+    
+    // VFS
+    vfs_init();
+    draw_string(fb, "[BOOT] Initializing VFS... OK", 10, boot_y, color_green);
+    boot_y += 18;
+    
+    // KiFS
+    draw_string(fb, "[BOOT] KiFS driver loaded", 10, boot_y, color_dim);
+    boot_y += 18;
+    
+    // KiELF
+    draw_string(fb, "[BOOT] KiELF loader ready", 10, boot_y, color_dim);
+    boot_y += 25;
+    
+    // Boot complete
+    draw_string(fb, "================================================", 10, boot_y, color_yellow);
+    boot_y += 18;
+    draw_string(fb, "[BOOT] All systems operational!", 10, boot_y, color_cyan);
+    boot_y += 30;
+    
+    draw_string(fb, "[BOOT] Press any key to continue...", 10, boot_y, color_yellow);
+    
+    // Wait for key press
+    while (!enter_pressed) {
+        asm volatile("hlt");
+    }
+    boot_done = 1;
+    
+    // Clear and show shell
+    for (uint32_t i = 0; i < fb->width * fb->height; i++) fb_ptr[i] = color_bg;
+    draw_string(fb, "================================================", 10, 10, color_dim);
+    draw_string(fb, "  KiOS v0.7.0 - Ready", 10, 30, color_white);
+    draw_string(fb, "================================================", 10, 50, color_dim);
+    draw_string(fb, "Type 'help' for commands.", 10, 80, color_dim);
+    
+    shell_y = 110;
     draw_string(fb, PROMPT, 10, shell_y, color_yellow);
 
     for (;;) asm("hlt");

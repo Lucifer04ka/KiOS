@@ -2,6 +2,7 @@
 #define KIFS_H
 
 #include <stdint.h>
+#include <string.h>
 
 // ============================================================================
 // KiFS Constants

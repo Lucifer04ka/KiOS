@@ -5,6 +5,27 @@
 #include <string.h>
 
 // ============================================================================
+// Simple memset implementation
+// ============================================================================
+
+static void* kifs_memset(void* dest, int val, uint64_t count) {
+    unsigned char* p = dest;
+    while (count--) *p++ = (unsigned char)val;
+    return dest;
+}
+
+// ============================================================================
+// Simple memcpy implementation  
+// ============================================================================
+
+static void* kifs_memcpy(void* dest, const void* src, uint64_t count) {
+    unsigned char* d = dest;
+    const unsigned char* s = src;
+    while (count--) *d++ = *s++;
+    return dest;
+}
+
+// ============================================================================
 // Global Variables
 // ============================================================================
 
@@ -44,9 +65,10 @@ int kifs_format(void* storage, uint64_t size) {
     if (!storage || size < KIFS_BLOCK_SIZE * 10) return -1;
     
     // Zero out
-    memset(storage, 0, KIFS_BLOCK_SIZE * 10);
+    kifs_memset(storage, 0, KIFS_BLOCK_SIZE * 10);
     
     kifs_sb = (kifs_superblock_t*)storage;
+    kifs_storage = storage;  // Set this BEFORE using get_block
     
     // Set superblock
     kifs_sb->magic = KIFS_MAGIC;
@@ -69,7 +91,9 @@ int kifs_format(void* storage, uint64_t size) {
     root->direct[0] = 2;
     
     // Create "." and ".." entries in root directory
-    kifs_dirent_t* de = (kifs_dirent_t*)get_block(2);
+    void* block2 = (uint8_t*)storage + 2 * KIFS_BLOCK_SIZE;
+    kifs_memset(block2, 0, KIFS_BLOCK_SIZE);
+    kifs_dirent_t* de = (kifs_dirent_t*)block2;
     de->inode = 1;
     de->name_len = 1;
     de->type = 2; // DT_DIR
@@ -84,7 +108,6 @@ int kifs_format(void* storage, uint64_t size) {
     de->name[1] = '.';
     de->rec_len = KIFS_BLOCK_SIZE - 16;
     
-    kifs_storage = storage;
     kifs_mounted = 1;
     
     return 0;
@@ -173,7 +196,7 @@ int kifs_read(int fd, void* buf, uint64_t count) {
         to_read = current_inode->size - current_pos;
     }
     
-    memcpy(buf, (uint8_t*)block + current_pos, to_read);
+    kifs_memcpy(buf, (uint8_t*)block + current_pos, to_read);
     current_pos += to_read;
     
     return to_read;
@@ -204,7 +227,7 @@ int kifs_write(int fd, const void* buf, uint64_t count) {
         to_write = KIFS_BLOCK_SIZE - current_pos;
     }
     
-    memcpy((uint8_t*)data_block + current_pos, buf, to_write);
+    kifs_memcpy((uint8_t*)data_block + current_pos, buf, to_write);
     current_pos += to_write;
     
     if (current_pos > current_inode->size) {
@@ -299,15 +322,24 @@ int kifs_mkdir(const char* path) {
 int kifs_list(const char* path) {
     if (!kifs_mounted) return -1;
     
-    // List root directory
+    // List root directory - just return count of entries
     kifs_inode_t* root = get_inode(1);
-    if (!root || root->direct[0] == 0) return -1;
+    if (!root || root->direct[0] == 0) return 0;
     
+    // Count directory entries
     void* block = get_block(root->direct[0]);
-    if (!block) return -1;
+    if (!block) return 0;
     
-    // Just return count for now
-    return (root->size > 0) ? 1 : 0;
+    int count = 0;
+    uint32_t pos = 0;
+    while (pos < root->size) {
+        kifs_dirent_t* de = (kifs_dirent_t*)((uint8_t*)block + pos);
+        if (de->inode != 0) count++;
+        pos += de->rec_len;
+        if (de->rec_len == 0) break;
+    }
+    
+    return count;
 }
 
 // ============================================================================
